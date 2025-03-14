@@ -12,7 +12,7 @@ def home():
     password="sidmysqlalwaysdata",
     database="sid-todo-flask_test")
     if connection.is_connected():
-        print(timestamp)
+       
         print("Connected")
     db_cursor = connection.cursor()
    
