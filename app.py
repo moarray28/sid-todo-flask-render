@@ -1,15 +1,18 @@
 from flask import Flask, render_template, request, redirect
 from datetime import datetime
+import pytz
 import mysql.connector as conn
 app = Flask(__name__)
-
+IST = pytz.timezone('Asia/Kolkata')  # Set timezone to IST
 @app.route('/', methods = ['GET','POST'])
+
 def home():
     connection= conn.connect(host="mysql-sid-todo-flask.alwaysdata.net",
     user="404053",
     password="sidmysqlalwaysdata",
     database="sid-todo-flask_test")
     if connection.is_connected():
+        print(timestamp)
         print("Connected")
     db_cursor = connection.cursor()
    
@@ -17,7 +20,8 @@ def home():
     if request.method == 'POST':
         task = request.form["task"]
         desc = request.form["desc"]
-        timestamp = datetime.now()
+        timestamp = datetime.now(pytz.utc)
+        
         db_cursor.execute("INSERT INTO `todo`(`Name`, `Description`,`Timstamp`) VALUES (%s,%s,%s)",(task,desc,timestamp))
         if connection.commit() is None:
             print(db_cursor.rowcount)
