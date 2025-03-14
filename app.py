@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect
+from datetime import datetime
 import mysql.connector as conn
 app = Flask(__name__)
 
@@ -11,12 +12,13 @@ def home():
     if connection.is_connected():
         print("Connected")
     db_cursor = connection.cursor()
-    
+   
     # capturing form 
     if request.method == 'POST':
         task = request.form["task"]
         desc = request.form["desc"]
-        db_cursor.execute("INSERT INTO `todo`(`Name`, `Description`) VALUES (%s,%s)",(task,desc))
+        timestamp = datetime.now()
+        db_cursor.execute("INSERT INTO `todo`(`Name`, `Description`,`Timstamp`) VALUES (%s,%s,%s)",(task,desc,timestamp))
         if connection.commit() is None:
             print(db_cursor.rowcount)
 
@@ -67,5 +69,5 @@ def update(id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug= True)
    
